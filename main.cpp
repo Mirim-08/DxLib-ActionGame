@@ -126,9 +126,9 @@ void Game_Draw()
 	// 敵
 	gEnemy->Enemy_Draw();
 	// スコア
-	gGame->Draw_Score();
+	gGame->Score_Draw();
 	// ゲームクリア、ゲームオーバー
-	gGame->Draw_Result();
+	gGame->Result_Draw();
 }
 
 void Game_End()
