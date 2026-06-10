@@ -229,7 +229,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			// 描画処理
 			Game_Draw();
 			//0.1秒ごとにスコアを1増やす
-			gGame->Update_Score();
+			gGame->Score_Update();
 			// 裏画面の内容を表画面に反映させる 
 			ScreenFlip();
 			// １７ミリ秒(約秒間６０フレームだった時の１フレームあたりの経過時間)
