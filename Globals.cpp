@@ -7,10 +7,16 @@
 #include "Goal.h"
 #include "Title.h"
 
-// グローバル変数の定義
-Player* gPlayer = nullptr;
-Background* gBackground = nullptr;
-Game* gGame = nullptr;
-Enemy* gEnemy = nullptr;
-Block* gBlock = nullptr;
-Goal* gGoal = nullptr;
+//==================================================
+// グローバルオブジェクトの実体定義
+// 各クラスから共有して利用する
+//==================================================
+
+Player* gPlayer = nullptr;         // プレイヤー管理オブジェクト
+Background* gBackground = nullptr; // 背景・カメラ管理オブジェクト
+Game* gGame = nullptr;             // ゲーム状態管理オブジェクト
+Enemy* gEnemy = nullptr;           // 足場（ブロック）管理オブジェクト
+Block* gBlock = nullptr;           // ゴール管理オブジェクト
+Goal* gGoal = nullptr;             // タイトル画面管理オブジェクト
+
+int bgmsound = -1; // BGMサウンドハンドル

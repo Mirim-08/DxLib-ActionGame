@@ -1,71 +1,91 @@
 #pragma once
+//==================================================
+// 画面設定
+//==================================================
+const int SCREEN_WIDTH = 1280;     // 画面幅
+const int SCREEN_HEIGHT = 720;     // 画面高さ
+const int SCREEN_COLOR_DEPTH = 32; // 色深度
+const int FRAME_TIME_MS = 17;      // 約60FPS
+const int STAGE_WIDTH = 4900;      // ステージ全体の横幅
 
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
-const int SCREEN_COLOR_DEPTH = 32;
-const int FRAME_TIME_MS = 17;  // 約60FPS
-const int STAGE_WIDTH = 4900;
+//==================================================
+// エネミー設定
+//==================================================
+const int ENEMY_SPEED = 2;                  // 敵の移動速度
+const int ENEMY_SIZE = 40;                  // 敵のサイズ
+const int RIGHT = 1;                        // 右方向
+const int LEFT = -1;                        // 左方向
+const int ENEMY_CENTER_X = 0;               // 回転・反転時の中心X座標
+const int ENEMY_CENTER_Y = 0;               // 回転・反転時の中心Y座標
+const float ENEMY_SCALE = 0.65f;            // 敵画像の拡大率
+const float ANGLE = 0.0f;                   // 描画角度
+const int ENEMY_JUMP_BOUNCE = 15;           // 敵を踏んだ時の跳ね返り力
+const int ENEMY_KILL_SCORE = 1000;          // 敵撃破時の加算スコア
+const int ENEMY_HIT_OFFSET = 8;             // 当たり判定縮小用オフセット
+const int ENEMY_GROUND_CHECK_OFFSET = 10;   // 上から踏んだ判定用オフセット
 
-// エネミー
-const int ENEMY_SPEED = 2;
-const int ENEMY_SIZE = 40;
-const int RIGHT = 1;
-const int LEFT = -1;
-const int ENEMY_CENTER_X = 0;
-const int ENEMY_CENTER_Y = 0;
-const float ENEMY_SCALE = 0.65f;
-const float ANGLE = 0.0f;
-const int ENEMY_JUMP_BOUNCE = 15;
-const int ENEMY_KILL_SCORE = 1000;
-const int ENEMY_HIT_OFFSET = 8;
-const int ENEMY_GROUND_CHECK_OFFSET = 10;
+//==================================================
+// ステージ設定
+//==================================================
+const float GROUND_Y = 510.0f; // 地面のY座標
+const int BACKGROUND_Y = 0;    // 背景描画位置
 
-const float GROUND_Y = 510.0f;
-const int BACKGROUND_Y = 0;
+//==================================================
+// スコア設定
+//==================================================
+const int SCORE_X = 0;              // スコア表示X座標
+const int SCORE_Y = 0;              // スコア表示Y座標
+const int SCORE_TIME_DIVISOR = 10;  // 経過時間によるスコア加算間隔
 
-// スコア
-const int SCORE_X = 0;
-const int SCORE_Y = 0;
-const int SCORE_TIME_DIVISOR = 10;  // 0.01秒ごとに+1
+//==================================================
+// カラー定義
+//==================================================
+const int WHITE = 0xffffff;  // 白
+const int YELLOW = 0xffff00; // 黄色
+const int GRAY = 0xcccccc;   // グレー
+const int RED = 0xFF0000;    // 赤
+const int BLACK = 0x000000;  // 黒
 
-// カラー
-const int WHITE = 0xffffff;
-const int YELLOW = 0xffff00;
-const int GRAY = 0xcccccc;
-const int RED = 0xFF0000;
-const int BLACK = 0x000000;
+//==================================================
+// タイトル画面設定
+//==================================================
+const int CTRL_W = 50; // 操作説明の表示位置X
+const int BACK_X = 0;  // 背景描画開始X
+const int BACK_Y = 0;  // 背景描画開始Y
 
-// タイトル
-const int CTRL_W = 50;
-const int BACK_X = 0;
-const int BACK_Y = 0;
+//==================================================
+// プレイヤー設定
+//==================================================
+const float PLAYER_SPEED_NORMAL = 5.0f; // 通常移動速度
+const float PLAYER_SPEED_RUN = 7.0f;    // ダッシュ速度
+const int PLAYER_JUMP_POWER = 20;       // ジャンプ初速
+const float GRAVITY = 1.0f;             // 重力加速度
+const float DEAD_ACCELERATION = 0.8f;   // 死亡時の落下加速度
 
-// プレイヤー
-const float PLAYER_SPEED_NORMAL = 5.0f;
-const float PLAYER_SPEED_RUN = 7.0f;
-const int PLAYER_JUMP_POWER = 20;
-const float GRAVITY = 1.0f;
-const float DEAD_ACCELERATION = 0.8f;
+//==================================================
+// カメラ設定
+//==================================================
+const float CAMERA_POSITION_RATIO = 4.5f; // プレイヤーの表示位置比率
 
-// カメラ
-const float CAMERA_POSITION_RATIO = 4.5f;
+//==================================================
+// UI表示位置
+//==================================================
+const int GAMEOVER_TEXT_OFFSET_X = 110;   // GAME OVER表示位置X
+const int GAMEOVER_TEXT_OFFSET_Y = 20;    // GAME OVER表示位置Y
+const int GAMEINFO_TEXT_OFFSET_X = 200;   // 操作説明表示位置X
+const int GAMEINFO_TEXT_OFFSET_Y = 20;    // 操作説明表示位置Y
 
-// ゴール
-const int PLAYER_DEATH_VELOCITY = -20;  // 敵に当たった時の上向き速度
+//==================================================
+// タイトル画面UI
+//==================================================
+const int TITLE_OFFSET_X = 200; // タイトル表示位置X
+const int TITLE_OFFSET_Y = 150; // タイトル表示位置Y
+const int ENTER_OFFSET_Y = 100; // ENTER案内表示位置Y
 
-// UI表示位置 
-const int GAMEOVER_TEXT_OFFSET_X = 110;    // ゲームオーバー、クリアテキストのX軸
-const int GAMEOVER_TEXT_OFFSET_Y = 20;     // ゲームオーバー、クリアテキストのY軸
-const int GAMEINFO_TEXT_OFFSET_X = 200;    // ゲーム情報テキストのX軸
-const int GAMEINFO_TEXT_OFFSET_Y = 20;     // ゲーム情報テキストのY軸
-
-// タイトル
-const int TITLE_OFFSET_X = 200;
-const int TITLE_OFFSET_Y = 150;
-const int ENTER_OFFSET_Y = 100;
-
-// フォントサイズ
-const int DEFAULT_SIZE = 30;
-const int TITLE_FONT_SIZE = 80;
-const int START_FONT_SIZE = 40;
-const int HELP_FONT_SIZE = 25;
+//==================================================
+// フォント設定
+//==================================================
+const int DEFAULT_SIZE = 30;    // 通常フォントサイズ
+const int TITLE_FONT_SIZE = 80; // タイトル文字サイズ
+const int START_FONT_SIZE = 40; // スタート案内文字サイズ
+const int HELP_FONT_SIZE = 25;  // 操作説明文字サイズ

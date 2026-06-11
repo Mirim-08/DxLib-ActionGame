@@ -11,20 +11,23 @@ void Enemy::Enemy_Init() // エネミー初期化
 	hitsound = LoadSoundMem("sound/hit.mp3"); // ヒットサウンドの読み込み
 }
 
-void Enemy::Enemy_Update() // 更新
+void Enemy::Enemy_Update() // エネミー更新
 {
-	for (auto& e : enemies)
+	for (Enemy& e : enemies)
 	{
-		if (!e.active) continue;// 左右に動く
+		if (!e.active) continue;// 非アクティブな敵は処理しない
 
+		// 向いている方向へ移動
 		e.x += e.speed * e.direction;
 
+		// 左端に到達したら右向きに反転
 		if (e.x <= e.leftBound)
 		{
 			e.x = e.leftBound;
 			e.direction = RIGHT;
 		}
 
+		// 右端に到達したら左向きに反転
 		if (e.x + e.w >= e.rightBound)
 		{
 			e.x = e.rightBound - e.w;
@@ -38,18 +41,21 @@ void  Enemy::Enemy_Setup() // エネミー配置
 {
 	std::vector<Enemy> enemyList
 	{
-		{x = 330,  y = GROUND_Y - 100, w = ENEMY_SIZE, h = ENEMY_SIZE, speed = ENEMY_SPEED, leftBound = 300,  rightBound = 410,  direction = RIGHT, active = true},
-	    {x = 540,  y = GROUND_Y - 180, w = ENEMY_SIZE, h = ENEMY_SIZE, speed = ENEMY_SPEED, leftBound = 520,  rightBound = 620,  direction = LEFT , active = true},
-	    {x = 780,  y = GROUND_Y - 260, w = ENEMY_SIZE, h = ENEMY_SIZE, speed = ENEMY_SPEED, leftBound = 760,  rightBound = 860,  direction = RIGHT, active = true},
-	    {x = 1320, y = GROUND_Y - 200, w = ENEMY_SIZE, h = ENEMY_SIZE, speed = ENEMY_SPEED, leftBound = 1300, rightBound = 1420, direction = LEFT , active = true},
-	    {x = 1880, y = GROUND_Y - 180, w = ENEMY_SIZE, h = ENEMY_SIZE, speed = ENEMY_SPEED, leftBound = 1850, rightBound = 1950, direction = RIGHT, active = true},
-	    {x = 2420, y = GROUND_Y - 170, w = ENEMY_SIZE, h = ENEMY_SIZE, speed = ENEMY_SPEED, leftBound = 2400, rightBound = 2600, direction = LEFT , active = true},
-	    {x = 2720, y = GROUND_Y - 210, w = ENEMY_SIZE, h = ENEMY_SIZE, speed = ENEMY_SPEED, leftBound = 2700, rightBound = 2950, direction = RIGHT, active = true},
-	    {x = 3420, y = GROUND_Y - 220, w = ENEMY_SIZE, h = ENEMY_SIZE, speed = ENEMY_SPEED, leftBound = 3400, rightBound = 3550, direction = LEFT , active = true},
-	    {x = 4020, y = GROUND_Y - 230, w = ENEMY_SIZE, h = ENEMY_SIZE, speed = ENEMY_SPEED, leftBound = 4000, rightBound = 4100, direction = LEFT , active = true},
+		// x座標, y座標, サイズ, 移動速度, 移動範囲, 初期向き
+		{330,  GROUND_Y - 100, ENEMY_SIZE, ENEMY_SIZE, ENEMY_SPEED, 300,  410,  RIGHT, TRUE},
+	    {540,  GROUND_Y - 180, ENEMY_SIZE, ENEMY_SIZE, ENEMY_SPEED, 520,  620,  LEFT , TRUE},
+	    {780,  GROUND_Y - 260, ENEMY_SIZE, ENEMY_SIZE, ENEMY_SPEED, 760,  860,  RIGHT, TRUE},
+	    {1320, GROUND_Y - 200, ENEMY_SIZE, ENEMY_SIZE, ENEMY_SPEED, 1300, 1420, LEFT , TRUE},
+	    {1880, GROUND_Y - 180, ENEMY_SIZE, ENEMY_SIZE, ENEMY_SPEED, 1850, 1950, RIGHT, TRUE},
+	    {2420, GROUND_Y - 170, ENEMY_SIZE, ENEMY_SIZE, ENEMY_SPEED, 2400, 2600, LEFT , TRUE},
+	    {2720, GROUND_Y - 210, ENEMY_SIZE, ENEMY_SIZE, ENEMY_SPEED, 2700, 2950, RIGHT, TRUE},
+	    {3420, GROUND_Y - 220, ENEMY_SIZE, ENEMY_SIZE, ENEMY_SPEED, 3400, 3550, LEFT , TRUE},
+	    {4020, GROUND_Y - 230, ENEMY_SIZE, ENEMY_SIZE, ENEMY_SPEED, 4000, 4100, LEFT , TRUE},
 	};
+
 	enemies = enemyList;
 
+	// 各敵に必要なオブジェクトへの参照を設定
 	for (Enemy& e : enemies)
 	{
 		e.player = gPlayer;
@@ -58,10 +64,11 @@ void  Enemy::Enemy_Setup() // エネミー配置
 	}
 }
 
-void Enemy::Enemy_Vec() // 当たり判定
+void Enemy::Enemy_Vec() // プレイヤーとの当たり判定
 {
 	if (!gPlayer) return; // プレイヤーが存在しない場合は処理しない
 
+	// プレイヤー情報を取得
 	float prevY = gPlayer->prevY;
 	float jumpPower = gPlayer->jumpPower;
 	float playerX = gPlayer->playerX;
@@ -71,9 +78,9 @@ void Enemy::Enemy_Vec() // 当たり判定
 
 	for (Enemy& e : enemies)
 	{
-		if (!e.active) continue; // 非アクティブなら処理スキップ
+		if (!e.active) continue; // 倒された敵は判定しない
 
-		// 矩形同士の衝突判定（AABB）
+		// AABBによる矩形同士の衝突判定
 		if (playerX < e.x + e.w - ENEMY_HIT_OFFSET &&
 			playerX + playerW > e.x + ENEMY_HIT_OFFSET &&
 			playerY < e.y + e.h &&
@@ -81,18 +88,19 @@ void Enemy::Enemy_Vec() // 当たり判定
 		{
 			PlaySoundMem(hitsound, DX_PLAYTYPE_BACK); // ヒット音を再生
 
-			// プレイヤーがジャンプしていて、敵の上から落下している場合
+			// 上から踏みつけた場合
 			if (jumpPower <= 0 && prevY + playerH <= e.y + ENEMY_GROUND_CHECK_OFFSET)
 			{
-				e.active = FALSE;
+				e.active = FALSE;// 敵を無効化
 
-				gPlayer->jumpPower = ENEMY_JUMP_BOUNCE;
-				gGame->score += ENEMY_KILL_SCORE;
+				gPlayer->jumpPower = ENEMY_JUMP_BOUNCE; // 踏み返りジャンプ
+				gGame->score += ENEMY_KILL_SCORE;       // スコア加算
 			}
 			else
 			{
-				gGame->gameOver = TRUE; // ゲームオーバー
-				StopSoundMem(bgmsound); // BGMを止める
+				// 横や下から接触した場合はゲームオーバー
+				gGame->gameOver = TRUE;
+				StopSoundMem(bgmsound);
 			}
 		}
 	}
@@ -104,10 +112,12 @@ void Enemy::Enemy_Draw()// エネミー描画
 
 	for (const Enemy& e : enemies)
 	{
-		if (!e.active) continue;
+		if (!e.active) continue;// 非表示の敵は描画しない
 
+		// カメラ位置を考慮した描画座標
 		int ex = e.x - cameraX;
 
+		// 向きに応じて反転描画
 		DrawRotaGraph2(
 			ex,
 			e.y,
@@ -122,8 +132,8 @@ void Enemy::Enemy_Draw()// エネミー描画
 	}
 }
 
-void Enemy::Enemy_End() // 終了
+void Enemy::Enemy_End() // 終了処理
 {
-	DeleteGraph(enemyGraph); // 敵ハンドルを削除
-	DeleteSoundMem(hitsound); // ヒット音ハンドルを削除
+	DeleteGraph(enemyGraph); // エネミー画像を解放
+	DeleteSoundMem(hitsound); // ヒット音を解放
 }

@@ -3,36 +3,63 @@
 
 class Background;
 
+// プレイヤーの移動・ジャンプ・描画を管理するクラス
 class Player
 {
 public:
-	Background* background = nullptr;
+	Background* background = nullptr; // 背景クラスへの参照
 
-	int playerGraph = -1; // プレイヤーハンドル
-	int walksound = -1; // 歩行音ハンドル
-	int jumpsound = -1; // ジャンプ音ハンドル
+	//==================================================
+	// 画像・サウンド
+	//==================================================
+	int playerGraph = -1; // プレイヤー画像のハンドル
+	int walksound = -1;   // 歩行音のハンドル
+	int jumpsound = -1;   // ジャンプ音のハンドル
 
+	//==================================================
+	// 座標・サイズ
+	//==================================================
 	float playerX = 100.0f; // X座標
 	float playerY = 100.0f; // Y座標
-	int playerW = 0; // 幅
-	int playerH = 0; // 高さ
-	float Speed = 0.0f; // スピード
-	bool moveFlag = FALSE; // 動いているかのフラグ
-	bool hitFlag = FALSE; // 当たっているかのフラグ
-	bool Reverse = FALSE; // 反転フラグ
-	float prevX = 0.0f;
-	float prevY = 0.0f;
-	float jumpPower = 0.0f; // ジャンプ力
-	bool isGround = TRUE; // 地面にいるかどうか
-	bool jumpFlag = FALSE; // ジャンプしているかのフラグ
-	bool prevSpace = FALSE; // 前フレームのスペースキーの状態
 
-	int coyoteCounter = 0;  // コヨーテタイムカウンター
+	int playerW = 0; // プレイヤーの幅
+	int playerH = 0; // プレイヤーの高さ
+
+	//==================================================
+	// 移動関連
+	//==================================================
+	float Speed = 0.0f;    // 移動速度
+	bool moveFlag = FALSE; // 移動中かどうか
+	bool Reverse = FALSE;  // 左右反転フラグ
+
+	float prevX = 0.0f; // 前フレームのX座標
+	float prevY = 0.0f; // 前フレームのY座標
+
+	//==================================================
+	// 当たり判定関連
+	//==================================================
+	bool hitFlag = FALSE; // オブジェクトと衝突しているか
+
+	//==================================================
+	// ジャンプ関連
+	//==================================================
+	float jumpPower = 0.0f; // ジャンプ速度（上昇・落下速度）
+	bool isGround = TRUE;   // 地面または足場に接地しているか
+	bool jumpFlag = FALSE;  // ジャンプ開始フラグ
+	bool prevSpace = FALSE; // 前フレームのスペースキー状態
+
+	//==================================================
+	// コヨーテタイム
+	//==================================================
+	int coyoteCounter = 0;     // コヨーテタイムカウンター
 	const int COYOTE_TIME = 6; // コヨーテタイムの長さ（フレーム数）
 
-	void Player_Init(); //初期化
-	void Player_Move(); // 動き
-	void Player_Draw(); //描画
-	void Player_Vec(); //当たり判定
-	void Player_End(); // 終了
+	//==================================================
+	// 関数
+	//==================================================
+	void Player_Init(); // 初期化
+	void Player_Move(); // 移動処理
+	void Player_Draw(); // 描画処理
+	void Player_Vec();  // ジャンプ・重力・当たり判定処理
+	void Player_End();  // 終了処理
 };

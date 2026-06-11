@@ -9,21 +9,27 @@
 #include "Config.h"
 #include "Title.h"
 
-// BGMハンドル 
-int bgmsound = -1;
-bool bgmStarted = FALSE;
-// 現在のカウントを取得する
-int time = 0;
-Title* gTitle = nullptr;
+//==================================================
+// グローバル変数
+//==================================================
+bool bgmStarted = FALSE; // BGM再生済みフラグ
+int time = 0;            // フレーム制御用時間
+Title* gTitle = nullptr; // タイトル画面管理クラス
 
-// プロトタイプ宣言
+//==================================================
+// 関数プロトタイプ宣言
+//==================================================
 void Game_Init();
 void Game_Update();
 void Game_Draw();
 void Game_End();
 
+//==================================================
+// ゲーム初期化
+//==================================================
 void Game_Init()
 { 
+	// 以前のBGMが残っている場合は停止して解放
 	if (bgmsound >= 0)
 	{
 		StopSoundMem(bgmsound);
@@ -31,8 +37,10 @@ void Game_Init()
 		bgmsound = -1;
 	}
 
-	// フラグをリセット
+	// BGM再生フラグをリセット
 	bgmStarted = FALSE; 
+
+	// 各ゲームオブジェクト生成
 	gPlayer = new Player();
 	gBackground = new Background();
 	gEnemy = new Enemy();
@@ -40,44 +48,51 @@ void Game_Init()
 	gGame = new Game();
 	gGoal = new Goal();
 
-	//ポインタの相互参照を設定
+	// オブジェクト同士の参照を設定
 	gPlayer->background = gBackground;
 	gBackground->player = gPlayer;
+
 	gEnemy->player = gPlayer;
 	gEnemy->background = gBackground;
 	gEnemy->game = gGame;
+
 	gBlock->player = gPlayer;
 	gBlock->background = gBackground;
+
 	gGame->background = gBackground;
+
 	gGoal->player = gPlayer; 
 	gGoal->background = gBackground; 
 	gGoal->game = gGame;
 
 	// スコアの初期化
 	gGame->Score_Init();
-	// プレイヤーの初期化
+
+	// 各クラス初期化
 	gPlayer->Player_Init(); 
-	// 敵の初期化
 	gEnemy->Enemy_Init();
-	// ブロックの初期化
 	gBlock->Block_Init();
-	// 背景の初期化
 	gBackground->Back_Init(); 
-	// ゴールの初期化
 	gGoal->Goal_Init();
-	// 敵の配置
+
+	// ステージデータ設定
 	gEnemy->Enemy_Setup();
-	// ブロックの配置
 	gBlock->Block_Setup();
+
 	// BGMの読み込み
 	bgmsound = LoadSoundMem("sound/field.mp3"); // BGMの読み込み
 }
 
+//==================================================
+// ゲーム更新処理
+//==================================================
 void Game_Update()
 {
-	int gameOver = gGame ? gGame->gameOver : FALSE; 
+	// ゲーム状態取得
+	int gameOver = gGame ? gGame->gameOver : FALSE;
 	int gameClear = gGame ? gGame->gameClear : FALSE;
 
+	// BGMを一度だけ再生
 	if (!bgmStarted && bgmsound >= 0)
 	{
 		PlaySoundMem(bgmsound, DX_PLAYTYPE_BACK, TRUE);
@@ -95,44 +110,49 @@ void Game_Update()
 		return;
 	}
 
-	// カメラ追従（プレイヤーが画面左付近に来るようにする） 
+	// カメラ更新
 	gBackground->Camera_Update();
-	// 背景の描画位置（ループ） 
+
+	// 背景スクロール更新
 	gBackground->Back_Loop();
-	// エネミー更新
+
+	// 敵の移動更新
 	gEnemy->Enemy_Update();
-	// プレイヤーの動き
+
+	// プレイヤー更新
 	gPlayer->Player_Move(); 
-	// プレイヤーの当たり判定
 	gPlayer->Player_Vec(); 
-	// ブロックの当たり判定
+
+	// 衝突判定
 	gBlock->Block_Vec(); 
-	// 敵の当たり判定
 	gEnemy->Enemy_Vec();
-	// ゴールの当たり判定
 	gGoal->Goal_Vec();
 }
 
+//==================================================
+// 描画処理
+//==================================================
 void Game_Draw()
 {
-	// 背景
-	gBackground->Back_Draw();
-	// ブロック
-	gBlock->Block_Draw();
-	// ゴール
-	gGoal->Goal_Draw();
-	// プレイヤー
-	gPlayer->Player_Draw();
-	// 敵
-	gEnemy->Enemy_Draw();
-	// スコア
-	gGame->Score_Draw();
-	// ゲームクリア、ゲームオーバー
-	gGame->Result_Draw();
+	// 描画順
+	// 背景 → ブロック → ゴール → プレイヤー → 敵 → UI
+
+	gBackground->Back_Draw(); // 背景
+	gBlock->Block_Draw();     // ブロック
+	gGoal->Goal_Draw();       // ゴール
+	gPlayer->Player_Draw();   // プレイヤー
+	gEnemy->Enemy_Draw();     // 敵
+
+	gGame->Score_Draw();      // スコア
+	gGame->Result_Draw();     // ゲームオーバー・クリア表示
 }
 
+//==================================================
+// 終了処理
+//==================================================
 void Game_End()
-  { // 読み込んだハンドルを削除
+  {
+	// プレイヤー解放
 	if (gPlayer)
 	{
 		gPlayer->Player_End();
@@ -140,6 +160,7 @@ void Game_End()
 		gPlayer = nullptr;
 	}
 
+	// 敵解放
 	if (gEnemy)
 	{
 		gEnemy->Enemy_End();
@@ -147,6 +168,7 @@ void Game_End()
 		gEnemy = nullptr;
 	}
 
+	// 背景解放
 	if (gBackground)
 	{
 		gBackground->Back_End();
@@ -154,6 +176,7 @@ void Game_End()
 		gBackground = nullptr;
 	}
 
+	// ブロック解放
 	if (gBlock)
 	{
 		gBlock->Block_End();
@@ -161,6 +184,7 @@ void Game_End()
 		gBlock = nullptr;
 	}
 
+	// ゴール解放
 	if (gGoal)
 	{
 		gGoal->Goal_End();
@@ -168,17 +192,20 @@ void Game_End()
 		gGoal = nullptr;
 	}
 
+	// ゲーム管理クラス解放
 	if (gGame)
 	{
 		delete gGame;
 		gGame = nullptr;
 	}
 
+	// BGM解放
 	if (bgmsound >= 0)
 	{
 		DeleteSoundMem(bgmsound);
 	}
 
+	// タイトル画面解放
 	if (gTitle)
 	{
 		delete gTitle;
@@ -186,62 +213,84 @@ void Game_End()
 	}
 }
 
+//==================================================
+// エントリーポイント
+//==================================================
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	// ウインドウモードで起動 
-	ChangeWindowMode(true);
+	// ウィンドウモード設定
+	ChangeWindowMode(TRUE);
+
+	// 画面設定
 	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_COLOR_DEPTH);
-	// DXライブラリ初期化処理 
+
+	// DxLib初期化
 	if (DxLib_Init() == -1)
 	{
 		return -1; // エラーが起きたら直ちに終了 
 	}
-	// 描画先画面を裏画面にセット 
+
+	// 描画先を裏画面に設定
 	SetDrawScreen(DX_SCREEN_BACK);
-	// タイトル画面の作成
+
+	// タイトル画面生成
 	gTitle = new Title();
 	gTitle->Title_Init();
+
 	bool gameStarted = FALSE;
-	// ループ
+
+	// メインループ
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
+		// タイトル画面表示中
 		if (!gameStarted)
 		{
-			// タイトル画面
 			gTitle->Title_Update();
+
 			ClearDrawScreen();
 			gTitle->Title_Draw();
 			ScreenFlip();
 
+			// Enterキーでゲーム開始
 			if (gTitle->isStarted)
 			{
 				gameStarted = TRUE;
-				Game_Init(); // ゲーム初期化
+				Game_Init();
 				time = GetNowCount();
 			}
 		}
+		// ゲームプレイ中
 		else
 		{
 			// 更新処理 
 			Game_Update();
-			// 画面を初期化する 
+
+			// 画面クリア
 			ClearDrawScreen();
+
 			// 描画処理
 			Game_Draw();
-			//0.1秒ごとにスコアを1増やす
+
+			// スコア更新
 			gGame->Score_Update();
-			// 裏画面の内容を表画面に反映させる 
+
+			// 裏画面を表画面へ反映
 			ScreenFlip();
-			// １７ミリ秒(約秒間６０フレームだった時の１フレームあたりの経過時間)
+
+			// 60FPS固定
 			while (GetNowCount() - time < FRAME_TIME_MS)
 			{
 			}
 			time = GetNowCount();
 		}
 	}
-	Game_End(); // 終了処理
-	// DXライブラリ使用の終了処理 
+
+	// ゲーム終了処理
+	Game_End();
+
+	// DxLib終了処理
 	DxLib_End();
-	// ソフトの終了 
+
+	
 	return 0;
 }

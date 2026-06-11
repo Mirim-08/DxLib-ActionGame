@@ -11,10 +11,12 @@ void Block::Block_Init()
 
 void Block::Block_Setup() // 足場配置
 {
-	int groundY = GROUND_Y;
+	int groundY = GROUND_Y;// 地面のY座標を取得
 
+	// 各足場の位置とサイズを設定
 	blocks =
 	{
+		// x座標, y座標, サイズ
 		{300, groundY - 60, 120, 60},
 		{520, groundY - 140, 120, 30},
 		{760, groundY - 220, 120, 30},
@@ -35,57 +37,64 @@ void Block::Block_Setup() // 足場配置
 	};
 }
 
-void Block::Block_Vec() // 当たり判定
+void Block::Block_Vec() // ブロックとの当たり判定
 {
 	if (gPlayer)
 	{
-		gPlayer->isGround = false; // 地面にいるかどうかのフラグをリセット
+		// 毎フレーム接地状態をリセットし、
+		// 衝突時のみ再びTRUEにする
+		gPlayer->isGround = FALSE; 
 	}
 
-	if (!gPlayer) return;
+	if (!gPlayer) return;// プレイヤーが存在しない場合は処理しない
 
+	// 前フレームと現在フレームの座標を取得
 	float prevX = gPlayer->prevX;
 	float prevY = gPlayer->prevY;
 	float playerX = gPlayer->playerX;
 	float playerY = gPlayer->playerY;
+	// プレイヤーサイズを取得
 	int playerW = gPlayer->playerW;
 	int playerH = gPlayer->playerH;
 
 	// 全ブロックとの衝突判定
 	for (const Block& b : blocks)
 	{
-		// AABB衝突判定
+		// AABB（矩形同士）の当たり判定
 		if (playerX + playerW > b.x &&
 			playerX < b.x + b.w &&
 			playerY + playerH > b.y &&
 			playerY < b.y + b.h)
 		{
-			// 上から着地
+			// 上からブロックに着地した場合
 			if (prevY + playerH <= b.y)
 			{
+				// プレイヤーをブロック上に配置
 				gPlayer->playerY = b.y - playerH;
 				gPlayer->prevY = gPlayer->playerY;
 
-				gPlayer->jumpFlag = FALSE; //　ジャンプフラグ
-
+				// 落下速度をリセット
 				gPlayer->jumpPower = 0;
 
-				gPlayer->isGround = TRUE; // 地面にいるフラグを立てる
-				// コヨーテタイムをセット
+				// 接地状態にする
+				gPlayer->isGround = TRUE;
+
+				// コヨーテタイムを開始
 				gPlayer->coyoteCounter = gPlayer->COYOTE_TIME;
 			}
-			// 下からぶつかる
+			// 下からブロックにぶつかった場合
 			else if (prevY >= b.y + b.h)
 			{
 				gPlayer->playerY = b.y + b.h;
+				// 上昇を停止
 				gPlayer->jumpPower = 0;
 			}
-			// 左からぶつかる
+			// 左側からブロックにぶつかった場合
 			else if (prevX + playerW <= b.x)
 			{
 				gPlayer->playerX = b.x - playerW;
 			}
-			// 右からぶつかる
+			// 右側からブロックにぶつかった場合
 			else if (prevX >= b.x + b.w)
 			{
 				gPlayer->playerX = b.x + b.w;
@@ -96,10 +105,12 @@ void Block::Block_Vec() // 当たり判定
 
 void Block::Block_Draw()// ブロック（足場）描画 
 {
+	// カメラ位置を取得
 	int cameraX = gBackground ? gBackground->cameraX : 0;
 
 	for (const Block& b : blocks)
 	{
+		// カメラ位置を考慮した描画座標
 		int sx = b.x - cameraX;
 
 		DrawExtendGraph(
@@ -113,7 +124,7 @@ void Block::Block_Draw()// ブロック（足場）描画
 	}
 }
 
-void Block::Block_End() // 終了
+void Block::Block_End() // 終了処理
 {
-	DeleteGraph(blockGraph); // ブロックハンドルの削除
+	DeleteGraph(blockGraph); // ブロック画像の解放
 }

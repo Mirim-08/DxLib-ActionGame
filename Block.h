@@ -5,21 +5,24 @@
 class Player;
 class Background;
 
+// 足場（ブロック）の管理クラス
 class Block
 {
 public:
-	Player* player = nullptr;
-	Background* background = nullptr;
+	Player* player = nullptr;         // プレイヤーへの参照
+	Background* background = nullptr; // 背景への参照
 
-	int blockGraph = -1; // ブロックハンドル
+	int blockGraph = -1; // ブロック画像のハンドル
 
+	// ブロックの位置・サイズ情報
 	int x = 0; // X座標
 	int y = 0; // Y座標
 	int w = 0; // 幅
 	int h = 0; // 高さ
 
-	Block() = default;
+	Block() = default; // デフォルトコンストラクタ
 
+	// ブロック生成用コンストラクタ
 	Block(int _x, int _y, int _w, int _h)
 	{
 		x = _x;
@@ -28,12 +31,11 @@ public:
 		h = _h;
 	}
 
-	std::vector<Block> blocks;
+	std::vector<Block> blocks; // ステージ内の全ブロックを格納
 
-	void Block_Init(); // 初期化
-	void Block_Setup();    // 配列
-	void Block_Vec();  // 当たり判定
-	void Block_Draw(); // 描画
-	void Block_End();  // 終了
+	void Block_Init();   // ブロック画像の読み込み
+	void Block_Setup();  // ブロック配置の設定
+	void Block_Vec();    // プレイヤーとの当たり判定
+	void Block_Draw();   // ブロックの描画
+	void Block_End();    // 終了処理
 };
-
