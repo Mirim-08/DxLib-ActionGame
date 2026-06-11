@@ -25,7 +25,7 @@ void Title::Title_Draw()
 	DrawString(
 		SCREEN_WIDTH / 2 - TITLE_OFFSET_X, 
 		SCREEN_HEIGHT / 2 - TITLE_OFFSET_Y,
-		"GAME TITLE",
+		"2D ACTION",
 		YELLOW
 	);
 
