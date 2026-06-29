@@ -38,6 +38,11 @@ const int SCORE_Y = 0;              // スコア表示Y座標
 const int SCORE_TIME_DIVISOR = 10;  // 経過時間によるスコア加算間隔
 
 //==================================================
+// タイム設定
+//==================================================
+const int TIME_Y = 30;              // スコア表示Y座標
+
+//==================================================
 // カラー定義
 //==================================================
 const int WHITE = 0xffffff;  // 白
@@ -60,7 +65,7 @@ const float PLAYER_SPEED_NORMAL = 5.0f; // 通常移動速度
 const float PLAYER_SPEED_RUN = 7.0f;    // ダッシュ速度
 const int PLAYER_JUMP_POWER = 20;       // ジャンプ初速
 const float GRAVITY = 1.0f;             // 重力加速度
-const float DEAD_ACCELERATION = 0.8f;   // 死亡時の落下加速度
+const int COYOTE_TIME = 6;              // コヨーテタイムの長さ（フレーム数）
 
 //==================================================
 // カメラ設定
@@ -71,9 +76,12 @@ const float CAMERA_POSITION_RATIO = 4.5f; // プレイヤーの表示位置比率
 // UI表示位置
 //==================================================
 const int GAMEOVER_TEXT_OFFSET_X = 110;   // GAME OVER表示位置X
-const int GAMEOVER_TEXT_OFFSET_Y = 20;    // GAME OVER表示位置Y
+const int GAMECLEAR_TEXT_OFFSET_X = 115;  // GAME CLEAR表示位置X
+const int GAME_TEXT_OFFSET_Y = 20;        // GAME OVER:CLEAR表示位置Y
 const int GAMEINFO_TEXT_OFFSET_X = 200;   // 操作説明表示位置X
 const int GAMEINFO_TEXT_OFFSET_Y = 20;    // 操作説明表示位置Y
+const double RESULT_FADE_SPEED = 0.005;   // フェード速度
+const int ALPHA_MAX = 255;                // アルファ値の最大値
 
 //==================================================
 // タイトル画面UI

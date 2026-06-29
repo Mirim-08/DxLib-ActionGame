@@ -19,4 +19,5 @@ Enemy* gEnemy = nullptr;           // 足場（ブロック）管理オブジェクト
 Block* gBlock = nullptr;           // ゴール管理オブジェクト
 Goal* gGoal = nullptr;             // タイトル画面管理オブジェクト
 
-int bgmsound = -1; // BGMサウンドハンドル
+int bgmSound = -1;  // BGMハンドル
+int overSound = -1; // ゲームオーバー音バンドル

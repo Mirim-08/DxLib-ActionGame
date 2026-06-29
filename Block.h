@@ -15,23 +15,21 @@ public:
 	int blockGraph = -1; // ブロック画像のハンドル
 
 	// ブロックの位置・サイズ情報
-	int x = 0; // X座標
-	int y = 0; // Y座標
-	int w = 0; // 幅
-	int h = 0; // 高さ
+	int x = 0;      // X座標
+	float y = 0.0f; // Y座標
+	int w = 0;      // 幅
+	int h = 0;      // 高さ
 
-	Block() = default; // デフォルトコンストラクタ
-
+	std::vector<Block> blocks; // ステージ内の全ブロックを格納
+	Block() = default;         // デフォルトコンストラクタ
 	// ブロック生成用コンストラクタ
-	Block(int _x, int _y, int _w, int _h)
+	Block(int _x, float _y, int _w, int _h)
 	{
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
 	}
-
-	std::vector<Block> blocks; // ステージ内の全ブロックを格納
 
 	void Block_Init();   // ブロック画像の読み込み
 	void Block_Setup();  // ブロック配置の設定

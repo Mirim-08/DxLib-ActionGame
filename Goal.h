@@ -1,19 +1,20 @@
 #pragma once
 #include "DxLib.h"
 
-class Player; 
-class Background; 
-class Game; 
+class Player;
+class Background;
+class Game;
 
 // ゴールオブジェクトを管理するクラス
-class Goal 
-{ 
-public: 
+class Goal
+{
+public:
 	Player* player = nullptr;         // プレイヤークラスへの参照
 	Background* background = nullptr; // 背景クラスへの参照
 	Game* game = nullptr;             // ゲーム管理クラスへの参照
 
-	int goalGraph = -1; // ゴール画像のハンドル
+	int goalGraph = -1;  // ゴール画像のハンドル
+	int clearSound = -1; // クリア音のハンドル
 
 	void Goal_Init();     // ゴール画像の読み込み
 	void Goal_Draw();     // ゴールの描画

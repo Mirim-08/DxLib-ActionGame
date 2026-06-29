@@ -13,9 +13,8 @@ public:
 	int backgroundGraph = -1; // 背景画像のハンドル
 
 	int screenWidth = SCREEN_WIDTH;   // 画面の横幅
-    int screenHeight = SCREEN_HEIGHT; // 画面の縦幅
-
-	int backgroundX = 0; // 背景画像の描画X座標
+	int screenHeight = SCREEN_HEIGHT; // 画面の縦幅
+	int backgroundX = 0;              // 背景画像の描画X座標
 
 	// カメラ関連
 	int cameraX = 0; // ワールド座標上のカメラ位置

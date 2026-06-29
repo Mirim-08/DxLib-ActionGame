@@ -14,48 +14,45 @@ public:
 	Background* background = nullptr;  // 背景への参照
 	Game* game = nullptr;              // ゲーム管理クラスへの参照
 
-	int enemyGraph = -1; // 敵画像のハンドル
-	int hitsound = -1;   // ヒット音のハンドル
+	int enemyGraph = -1;  // エネミー画像のハンドル
+	int stompSound = -1;  // 踏みつけ音のハンドル
 
 	float x = 0.0f; // X座標
 	float y = 0.0f; // Y座標
-	int w = 0; // 幅
-	int h = 0; // 高さ
+	int w = 0;      // 幅
+	int h = 0;      // 高さ
 
-	int speed = 0;       // 移動速度
+	int Speed = 0;       // 移動速度
 	int leftBound = 0;   // 左側の移動限界
 	int rightBound = 0;  // 右側の移動限界
 
-	int direction = 0;   // 移動方向（RIGHT または LEFT）
-	bool active = TRUE;  // 敵が存在しているか
+	int Direction = 0;   // 移動方向（RIGHT または LEFT）
+	bool Active = TRUE;  // 敵が存在しているか
 
-	// ステージ内の全敵を管理する配列
-	std::vector<Enemy> enemies;
-
-	Enemy() = default;// デフォルトコンストラクタ
-
+	std::vector<Enemy> enemies; // ステージ内の全敵を管理する配列
+	Enemy() = default;          // デフォルトコンストラクタ
 	// 敵生成用コンストラクタ
 	Enemy(
-		float _x, 
-		float _y, 
+		float _x,
+		float _y,
 		int _w,
-		int _h, 
-		int _speed, 
-		int _leftBound, 
-		int _rightBound, 
-		int _direction, 
-		bool _active
+		int _h,
+		int _speed,
+		int _leftBound,
+		int _rightBound,
+		int _Direction,
+		bool _Active
 	)
 	{
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
-		speed = _speed;
+		Speed = _speed;
 		leftBound = _leftBound;
 		rightBound = _rightBound;
-		direction = _direction;
-		active = _active;
+		Direction = _Direction;
+		Active = _Active;
 	}
 
 	void Enemy_Init();   // 敵画像・効果音の読み込み

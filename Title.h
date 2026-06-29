@@ -7,7 +7,8 @@ class Title
 public:
 	// ゲーム開始状態
 	bool isStarted = FALSE; // Enterキーが押されたらTRUEになる
-	
+
+	int titleBackGraph = -1; // タイトル背景画像
 
 	void Title_Init();      // タイトル画面の初期化
 	void Title_Update();    // タイトル画面の更新

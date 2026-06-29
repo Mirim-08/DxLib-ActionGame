@@ -28,17 +28,17 @@ void Game_End();
 // ゲーム初期化
 //==================================================
 void Game_Init()
-{ 
+{
 	// 以前のBGMが残っている場合は停止して解放
-	if (bgmsound >= 0)
+	if (bgmSound >= 0)
 	{
-		StopSoundMem(bgmsound);
-		DeleteSoundMem(bgmsound);
-		bgmsound = -1;
+		StopSoundMem(bgmSound);
+		DeleteSoundMem(bgmSound);
+		bgmSound = -1;
 	}
 
 	// BGM再生フラグをリセット
-	bgmStarted = FALSE; 
+	bgmStarted = FALSE;
 
 	// 各ゲームオブジェクト生成
 	gPlayer = new Player();
@@ -61,18 +61,18 @@ void Game_Init()
 
 	gGame->background = gBackground;
 
-	gGoal->player = gPlayer; 
-	gGoal->background = gBackground; 
+	gGoal->player = gPlayer;
+	gGoal->background = gBackground;
 	gGoal->game = gGame;
 
 	// スコアの初期化
 	gGame->Score_Init();
 
 	// 各クラス初期化
-	gPlayer->Player_Init(); 
+	gPlayer->Player_Init();
 	gEnemy->Enemy_Init();
 	gBlock->Block_Init();
-	gBackground->Back_Init(); 
+	gBackground->Back_Init();
 	gGoal->Goal_Init();
 
 	// ステージデータ設定
@@ -80,7 +80,7 @@ void Game_Init()
 	gBlock->Block_Setup();
 
 	// BGMの読み込み
-	bgmsound = LoadSoundMem("sound/field.mp3"); // BGMの読み込み
+	bgmSound = LoadSoundMem("Resource/sound/field.mp3"); // BGMの読み込み
 }
 
 //==================================================
@@ -93,9 +93,9 @@ void Game_Update()
 	int gameClear = gGame ? gGame->gameClear : FALSE;
 
 	// BGMを一度だけ再生
-	if (!bgmStarted && bgmsound >= 0)
+	if (!bgmStarted && bgmSound >= 0)
 	{
-		PlaySoundMem(bgmsound, DX_PLAYTYPE_BACK, TRUE);
+		PlaySoundMem(bgmSound, DX_PLAYTYPE_BACK, TRUE);
 		bgmStarted = TRUE;
 	}
 
@@ -120,11 +120,11 @@ void Game_Update()
 	gEnemy->Enemy_Update();
 
 	// プレイヤー更新
-	gPlayer->Player_Move(); 
-	gPlayer->Player_Vec(); 
+	gPlayer->Player_Move();
+	gPlayer->Player_Vec();
 
 	// 衝突判定
-	gBlock->Block_Vec(); 
+	gBlock->Block_Vec();
 	gEnemy->Enemy_Vec();
 	gGoal->Goal_Vec();
 }
@@ -143,7 +143,7 @@ void Game_Draw()
 	gPlayer->Player_Draw();   // プレイヤー
 	gEnemy->Enemy_Draw();     // 敵
 
-	gGame->Score_Draw();      // スコア
+	gGame->UI_Draw();      // スコア
 	gGame->Result_Draw();     // ゲームオーバー・クリア表示
 }
 
@@ -151,7 +151,7 @@ void Game_Draw()
 // 終了処理
 //==================================================
 void Game_End()
-  {
+{
 	// プレイヤー解放
 	if (gPlayer)
 	{
@@ -200,9 +200,9 @@ void Game_End()
 	}
 
 	// BGM解放
-	if (bgmsound >= 0)
+	if (bgmSound >= 0)
 	{
-		DeleteSoundMem(bgmsound);
+		DeleteSoundMem(bgmSound);
 	}
 
 	// タイトル画面解放
@@ -291,6 +291,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// DxLib終了処理
 	DxLib_End();
 
-	
+
 	return 0;
 }
